@@ -1,0 +1,63 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    /* outline: 2px solid red; */
+}
+
+body{
+    background-image: url(../image/map.png);
+}
+
+#map{
+    width: 100%;
+    height: 100vh;
+    margin: 0px;
+}
+
+#rover {
+    transition: all 50ms linear;
+    position: absolute;
+    width: 8vw;
+}
+
+.rocks {
+    position: absolute;
+    width: 5vw;
+}
+
+#container > .buttons{
+    display: flex;
+    margin: 40vw 36vw;
+}
+
+button{
+    width: 4.7vw;
+    border-radius: 10vw;
+}
+
+button:hover{
+    background-color: rgba(245, 59, 38, 0.867);
+}
+
+.buttons {
+    position: absolute;
+    z-index: 10;
+    margin: 5px;
+    padding: 6px;
+    background-color: #00000046;
+    border-radius: 20px;
+}
+
+.buttons img {
+    cursor: pointer;
+    display: flex;
+    width: 4vw;
+    margin: 2px;
+}
+
+.flag{
+    position: absolute;
+    width: 5vw;
+    margin: 84vh -8vw;
+}
