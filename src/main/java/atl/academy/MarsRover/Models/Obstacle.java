@@ -18,4 +18,5 @@ public class Obstacle {
 
     @Column(name = "positionY")
     private int y;
+
 }
