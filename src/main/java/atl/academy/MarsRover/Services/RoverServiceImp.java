@@ -1,7 +1,5 @@
 package atl.academy.MarsRover.Services;
 
-import atl.academy.MarsRover.Dto.ObstacleDto;
-import atl.academy.MarsRover.Dto.RoverDto;
 import atl.academy.MarsRover.Models.Direction;
 import atl.academy.MarsRover.Models.Obstacle;
 import atl.academy.MarsRover.Models.Rover;
@@ -68,7 +66,7 @@ public class RoverServiceImp implements RoverService {
         int positionYFinal = rover.getY();
         Direction direction = rover.getDirection();
 
-        int movement = isForward ? direction.getValue() : -direction.getValue();
+        int movement = isForward ? direction.getDirection() : -direction.getDirection();
 
         if (Direction.EAST.equals(direction) || Direction.WEST.equals(direction)) {
             positionYFinal -= movement;
