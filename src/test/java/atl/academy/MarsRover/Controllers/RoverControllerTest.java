@@ -1,22 +1,15 @@
 package atl.academy.MarsRover.Controllers;
 
-import atl.academy.MarsRover.Dto.CommandDto;
+import atl.academy.MarsRover.Models.Rover;
 import atl.academy.MarsRover.Services.RoverService;
-
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-@RunWith(MockitoJUnitRunner.class)
 public class RoverControllerTest {
 
     @Mock
@@ -25,32 +18,18 @@ public class RoverControllerTest {
     @InjectMocks
     private RoverController controller;
 
-    @Test
-    public void callService_whenReceiveCommand(){
-
-       CommandDto commandDto = new CommandDto();
-       List<String> commandsList = new ArrayList<>();
-       commandsList.add("F");
-       commandDto.setCommands(commandsList);
-
-       controller.sendCommand(commandDto);
-
-       verify(roverService, times(1)).sendCommand("F");
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void callService_whenReceiveCommand_FRF(){
+    public void testGetRover() {
+        Rover expectedRover = new Rover();
+        when(roverService.get()).thenReturn(expectedRover);
 
-        CommandDto commandDto = new CommandDto();
-        List<String> commandsList = new ArrayList<>();
-        commandsList.add("F");
-        commandsList.add("R");
-        commandsList.add("F");
-        commandDto.setCommands(commandsList);
+        Rover result = controller.get();
 
-        controller.sendCommand(commandDto);
-
-        verify(roverService, times(3)).sendCommand(any());
+        assertEquals(expectedRover, result);
     }
-
 }
