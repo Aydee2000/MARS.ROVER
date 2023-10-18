@@ -1,105 +1,131 @@
-const container = document.getElementById("container")
-const Rover = document.getElementById("rover")
-const Sound = document.getElementById("sound")
-let Rock = document.getElementsByClassName("rokcs")
 
-let btnTl = document.getElementById("btnTL")
-let btnA = document.getElementById("btnA")
-let btnB = document.getElementById("btnB")
-let btnTr = document.getElementById("btnTR")
+const container = document.getElementById("container");
+const rover = document.getElementById("rover");
+const Sound = document.getElementById("sound");
+const btnTL = document.getElementById("btnTL");
+const btnA = document.getElementById("btnA");
+const btnB = document.getElementById("btnB");
+const btnTR = document.getElementById("btnTR");
+
+let roverDirection = "up";
 
 playSoundMars();
-// LLama al backend
-createMap()
 
+createMap();
 
 async function createMap() {
-    
-    // Obtener la informacion del Rover
     refreshRover();
-    
-    // Obtener la informacion de los obstaculos
-    let obstaclesReponse = await fetch('/api/obstacle/', {
+
+    const obstaclesResponse = await fetch('/api/obstacle/', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json'
         }
-    })
-    let obstaclesJson = await obstaclesReponse.json();
+    });
+    const obstaclesJson = await obstaclesResponse.json();
 
     obstaclesJson.forEach(obstacleJson => {
-        createRock(obstacleJson.x, obstacleJson.y)
+        createRock(obstacleJson.x, obstacleJson.y);
     });
-
 }
 
 async function refreshRover() {
-    let roverReponse = await fetch('/api/rover/', {
+    const roverResponse = await fetch('/api/rover/', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json'
         }
     });
-    let roverJson = await roverReponse.json();
+    const roverJson = await roverResponse.json();
     moveRover(roverJson.x, roverJson.y);
 }
 
 function moveRover(x, y) {
-    Rover.style.left = (x * 100) + 'px'
-    Rover.style.top = (y * 100) + 'px'
-    playMoveSound()
+    rover.style.left = (x * 100) + 'px';
+    rover.style.top = (y * 100) + 'px';
+    playMoveSound();
 }
 
 function createRock(x, y) {
-    let rock = document.createElement("img")
-    rock.setAttribute("src", "../image/stone.png")
-    rock.setAttribute("class", "rocks")
+    const rock = document.createElement("img");
+    rock.setAttribute("src", "../image/stone.png");
+    rock.setAttribute("class", "rocks");
 
-    let container = document.getElementById("container")
-    container.appendChild(rock)
+    container.appendChild(rock);
 
-    rock.style.left = (x * 100) + 'px'
-    rock.style.top = (y * 100) + 'px'
+    rock.style.left = (x * 100) + 'px';
+    rock.style.top = (y * 100) + 'px';
+}
+
+function changeImageDirection(newDirection) {
+    const roverImage = document.getElementById("rover");
+
+    const imagePaths = {
+        "advance": "../image/rover-advance.png",
+        "back": "../image/rover-back.png",
+        "left": "../image/rover-left.png",
+        "right": "../image/rover-right.png"
+    };
+
+    if (imagePaths[newDirection]) {
+        roverImage.src = imagePaths[newDirection];
+    } else {
+        console.error("Dirección no válida");
+    }
 }
 
 
-
-btnTl.addEventListener('click', () => {
-    clickTurnLeft()
+btnTL.addEventListener('click', () => {
+    clickTurnLeft();
 });
 
 btnA.addEventListener('click', () => {
-    clickAdvance()
+    clickAdvance();
 });
 
 btnB.addEventListener('click', () => {
-    clickBack()
+    clickBack();
 });
 
-btnTr.addEventListener('click', () => {
-    clickTurnRight()
+btnTR.addEventListener('click', () => {
+    clickTurnRight();
 });
+
+
+//  arreglar direccion de imagen del rover
+//  al girar cambia de direccion pero al avanzar de vuelta su direccion cambia
+
 
 function clickTurnLeft() {
-    sendCommand("L")
+    sendCommand("L");
+    changeImageDirection("left");
+    console.log("left");
 }
 
 function clickAdvance() {
-    sendCommand("A")
+    sendCommand("A");
+    // changeImageDirection("back");
+    changeImageDirection("right");
+    console.log("advance");
 }
 
 function clickBack() {
-    sendCommand("B")
+    sendCommand("B");
+    // changeImageDirection("advance");
+    changeImageDirection("left");
+    console.log("back");
 }
 
 function clickTurnRight() {
-    sendCommand("R")
+    sendCommand("R");
+    changeImageDirection("right");
+    console.log("right");
 }
 
 async function sendCommand(command) {
-    let commands = {
+    const commands = {
         "commands": [command]
-    }
+    };
 
     await fetch('/api/rover/command', {
         method: 'POST',
@@ -112,106 +138,17 @@ async function sendCommand(command) {
 }
 
 function playMoveSound() {
-    let SoundMove = document.createElement('audio')
-    SoundMove.src = "../sounds/move.wav"
-    SoundMove.autoplay = true
-    SoundMove.volume = 1
-    Sound.appendChild(SoundMove)
+    const soundMove = document.createElement('audio');
+    soundMove.src = "../sounds/move.wav";
+    soundMove.autoplay = true;
+    soundMove.volume = 1;
+    Sound.appendChild(soundMove);
 }
 
 function playSoundMars() {
-    let SoundMars = document.createElement('audio')
-    SoundMars.src = "../sounds/mars.mp3"
-    SoundMars.autoplay = true
-    SoundMars.volume = 1
-    container.appendChild(SoundMars)
+    const soundMars = document.createElement('audio');
+    soundMars.src = "../sounds/mars.mp3";
+    soundMars.autoplay = true;
+    soundMars.volume = 1;
+    container.appendChild(soundMars);
 }
-
-
-
-// createMap();
-
-// async function createMap() {
-//     refreshRover();
-
-//     // Obtener la informacion de los obstaculos
-//     let obstacleResponse = await fetch('/api/obstacle/', {
-//         method: 'GET',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         }
-//     });
-//     let obstaclesJson = await obstacleResponse.json();
-
-//     obstaclesJson.forEach(obstacleJson => {
-//         createRock(obstacleJson.x, obstacleJson.y);
-//     });
-// }
-
-// async function refreshRover() {
-//     let roverResponse = await fetch('/api/rover/', {
-//         method: 'GET',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         }
-//     });
-//     let roverJson = await roverResponse.json();
-//     moveRover(roverJson.x, roverJson.y);
-// }
-
-// function moveRover(x, y) {
-//     document.getElementById("rover").style.left = (x * 100) + 'px'
-//     document.getElementById("rover").style.top = (y * 100) + 'px';
-//     playMoveSound();
-// }
-
-// function createRock(x, y) {
-//     var rock = document.createElement("img");
-//     rock.setAttribute("src", "../image/stone.png");
-//     rock.setAttribute("class", "rock");
-//     var container = document.getElementById("container");
-//     container.appendChild(rock);
-//     rock.style.left = (x * 100) + 'px'
-//     rock.style.top = (y * 100) + 'px';
-// }
-
-// var posX = 0;
-// var posY = 0;
-
-// function clickBtnRotateLeft() {
-//     sendCommand("L");
-// }
-
-// function clickBtnRotateRight() {
-//     sendCommand("R");
-// }
-
-// async function moveForward() {
-//     sendCommand("F");
-// }
-
-// function moveBack() {
-//     sendCommand("B");
-// }
-
-// async function sendCommand(command) {
-//     let requestBody = {
-//         "commands": [command]
-//     };
-
-//     await fetch('/api/rover/command/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(requestBody)
-//     });
-//     await refreshRover();
-// }
-
-// function playMoveSound() {
-//     var audioElement = document.createElement("audio");
-//     audioElement.src = "sounds/move.wav";
-//     audioElement.autoplay = true;
-//     document.getElementById("container").appendChild(audioElement);
-// }

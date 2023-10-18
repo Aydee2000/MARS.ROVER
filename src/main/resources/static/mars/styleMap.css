@@ -18,7 +18,7 @@ body{
 #rover {
     transition: all 50ms linear;
     position: absolute;
-    width: 8vw;
+    width: 6vw;
 }
 
 .rocks {
