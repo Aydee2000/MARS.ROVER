@@ -18,6 +18,7 @@ public class RoverServiceImp implements RoverService {
     @Autowired
     ObstacleRepository obstacleRepository;
 
+
     @Override
     public Rover get() {
         List<Rover> roverList = repository.findAll();
@@ -29,7 +30,6 @@ public class RoverServiceImp implements RoverService {
         Rover rover = get();
 
         if (rover == null) {
-            /// Manejar el caso en el que no haya un rover en la base de datos.
             return;
         }
 
@@ -74,27 +74,28 @@ public class RoverServiceImp implements RoverService {
             positionXFinal -= movement;
         }
 
-        if (iCanMoveToThisPosition(positionYFinal, positionXFinal)) {
+
+        if (iCanMoveToThisPosition(positionXFinal, positionYFinal)) {
             rover.setX(positionXFinal);
             rover.setY(positionYFinal);
         } else {
-            stopRover(rover, true);
+            stopRover(rover, false);
         }
     }
 
     private void stopRover(Rover rover, boolean isMoving) {
-        rover.setMoving(isMoving); // Cambiar el estado del rover en función de isMoving.
+        rover.setMoving(isMoving);
     }
 
-    private boolean iCanMoveToThisPosition(int positionXFinal, int positionYFinal) {
+   private boolean iCanMoveToThisPosition(int positionXFinal, int positionYFinal) {
         List<Obstacle> obstacles = obstacleRepository.findAll();
 
         for (Obstacle obstacle : obstacles) {
             if (obstacle.getY() == positionYFinal && obstacle.getX() == positionXFinal) {
-                return false; // Hay un obstáculo en esta posición, no se puede mover.
+                return false;
             }
         }
-        return true; // No hay obstáculos en esta posición, se puede mover.
+        return true;
     }
 
 }
